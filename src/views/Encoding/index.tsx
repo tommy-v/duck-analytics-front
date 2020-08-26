@@ -9,16 +9,17 @@ import { Label, Select } from '@rebass/forms';
 // Services
 import duckService from '../../services/duck.service';
 
-export default (): JSX.Element => {  
+export default (): JSX.Element => {
   const [state, setState] = useState({
     location: {
       coords: {
         latitude: 0,
         longitude: 0
       }
-    }
+    },
+    foods: []
   });
-  
+
   const { handleSubmit, register, errors } = useForm();
 
   const onSubmit = async (values: any, e: any) => {
@@ -33,6 +34,15 @@ export default (): JSX.Element => {
   };
 
   useEffect(() => {
+    duckService.getAll().then(foods => {
+      setState(state => {
+        return {
+          ...state,
+          foods
+        };
+      });
+    });
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position: any) => {
         setState((state: any) => {
@@ -53,19 +63,6 @@ export default (): JSX.Element => {
           {state.location.coords.latitude} - {state.location.coords.longitude}
         </Box>
 
-        <Box pt={2}>
-          <Label htmlFor="time">Time</Label>
-          <Select
-            ref={register}
-            id="time"
-            name="time"
-            defaultValue="1 - 5 min">
-            <option>1 - 5 min</option>
-            <option>5 - 10 min</option>
-            <option>+ 10 min</option>
-          </Select>
-        </Box>
-
         <Flex pt={2}>
           <Box mr={2} width={1 / 2}>
             <Label htmlFor="food">Food</Label>
@@ -74,9 +71,9 @@ export default (): JSX.Element => {
               id="food"
               name="food"
               defaultValue="Bread">
-              <option>Bread</option>
-              <option>Meet</option>
-              <option>Vegetables</option>
+              {
+                state.foods.map((food, i) => <option key={i}>{food}</option>)
+              }
             </Select>
           </Box>
 
