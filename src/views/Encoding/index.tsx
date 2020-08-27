@@ -21,6 +21,7 @@ interface Location {
  interface Encoding {
   location: Location;
   foods: Food[];
+  isLoading: boolean;
 }
 
 export default (): JSX.Element => {
@@ -29,12 +30,14 @@ export default (): JSX.Element => {
       latitude: 0,
       longitude: 0
     },
-    foods: []
+    foods: [],
+    isLoading: false
   });
 
   const { handleSubmit, register, errors } = useForm();
 
   const onSubmit = async (values: any, e: any) => {
+    setState({...state, isLoading: true});
     const newReport = {
       ...values,
       location: {
@@ -45,6 +48,7 @@ export default (): JSX.Element => {
 
     await duckService.createNewReport(newReport);
     e.target.reset();
+    setState({...state, isLoading: false});
     alert('Thanks for encoding');
   };
 
@@ -118,7 +122,9 @@ export default (): JSX.Element => {
         </Box>
         {errors.username && errors.username.message}
         <Box pt={3}>
-          <Button width="100%" type="submit">Submit</Button>
+          <Button width="100%" type="submit" disabled={state.isLoading}>
+            {state.isLoading ? 'Sending report...' : 'Submit'}
+          </Button>
         </Box>
       </form>
     </Box>
