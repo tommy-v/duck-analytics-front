@@ -24,7 +24,7 @@ function App(): JSX.Element {
       <BasicResponsiveBox>
         <TopBar/>
         <Router>
-          <Box mt={100}>
+          <Box mt={100} pt={3} px={3}>
             <Switch>
               <Route path="/encoding">
                 <Encoding />

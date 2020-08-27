@@ -9,13 +9,25 @@ import { Label, Select } from '@rebass/forms';
 // Services
 import duckService from '../../services/duck.service';
 
+interface Food {
+  _id: string;
+  title: string;
+  type: number;
+}
+interface Location {
+  latitude: number;
+  longitude: number;
+}
+ interface Encoding {
+  location: Location;
+  foods: Food[];
+}
+
 export default (): JSX.Element => {
-  const [state, setState] = useState({
+  const [state, setState] = useState<Encoding>({
     location: {
-      coords: {
-        latitude: 0,
-        longitude: 0
-      }
+      latitude: 0,
+      longitude: 0
     },
     foods: []
   });
@@ -25,7 +37,10 @@ export default (): JSX.Element => {
   const onSubmit = async (values: any, e: any) => {
     const newReport = {
       ...values,
-      location: state.location.coords
+      location: {
+        latitude: state.location.latitude,
+        longitude: state.location.longitude
+      }
     };
 
     await duckService.createNewReport(newReport);
@@ -48,7 +63,7 @@ export default (): JSX.Element => {
         setState((state: any) => {
           return {
             ...state,
-            location: position
+            location: position.coords
           };
         });
       });
@@ -60,55 +75,50 @@ export default (): JSX.Element => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box>
           <Label>Location</Label>
-          {state.location.coords.latitude} - {state.location.coords.longitude}
+          <Box mt={1}>
+            🌎 Lat {state.location.latitude} - Lon {state.location.longitude}
+          </Box>
         </Box>
-
         <Flex pt={2}>
           <Box mr={2} width={1 / 2}>
             <Label htmlFor="food">Food</Label>
             <Select
+              mt={1}
               ref={register}
               id="food"
               name="food"
               defaultValue="Bread">
               {
-                state.foods.map((food, i) => <option key={i}>{food}</option>)
+                state.foods.map((food, i) => <option key={i} value={food._id}>{food.title}</option>)
               }
             </Select>
           </Box>
-
           <Box width={1 / 2}>
             <Label htmlFor="quantity">Quantity</Label>
             <Select
+              mt={1}
               ref={register}
               id="quantity"
               name="quantity"
               defaultValue="100g">
-              <option>- 100g</option>
-              <option>100g</option>
-              <option>500g</option>
-              <option>1kg</option>
-              <option>+ 1kg</option>
+              {[100, 200, 300, 400, 500].map((n, i) => <option key={i} value={n}>{n}g</option>)}
             </Select>
           </Box>
         </Flex>
-
         <Box pt={2}>
-          <Label htmlFor="ducksNumber">Number of ducks</Label>
+          <Label htmlFor="duckCount">Number of ducks</Label>
           <Select
+            mt={1}
             ref={register}
-            id="ducksNumber"
-            name="ducksNumber"
-            defaultValue="1 - 5 min">
-            <option>1 - 5</option>
-            <option>5 - 10</option>
-            <option>+ 10</option>
+            id="duckCount"
+            name="duckCount"
+            defaultValue="5">
+            {[...Array(30)].map((_, i) => <option key={i}>{ ++i }</option>)}
           </Select>
         </Box>
-
         {errors.username && errors.username.message}
         <Box pt={3}>
-          <Button type="submit">Submit</Button>
+          <Button width="100%" type="submit">Submit</Button>
         </Box>
       </form>
     </Box>
