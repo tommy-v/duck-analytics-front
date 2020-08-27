@@ -14,7 +14,9 @@ const TopBar = (): JSX.Element => {
         textAlign: 'center'
       }}
     >
-      <Heading mt={4} fontSize={6}>Duck Analytics 🦆</Heading>
+      <Heading mt={4} fontSize={[5,6]}>
+        Duck Analytics <span aria-label="Duck" role="img">🦆</span>
+      </Heading>
     </Box>
   );
 };

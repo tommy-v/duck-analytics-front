@@ -12,11 +12,3 @@ export default {
     return res.data;
   }
 };
-
-const simulateApiCall = (time = 3000) => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, time);
-  });
-};

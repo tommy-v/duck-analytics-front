@@ -80,7 +80,8 @@ export default (): JSX.Element => {
         <Box>
           <Label>Location</Label>
           <Box mt={1}>
-            🌎 Lat {state.location.latitude} - Lon {state.location.longitude}
+            <span aria-label="Duck" role="img">🌎 </span>
+            Lat {state.location.latitude} - Lon {state.location.longitude}
           </Box>
         </Box>
         <Flex pt={2}>
@@ -98,12 +99,12 @@ export default (): JSX.Element => {
             </Select>
           </Box>
           <Box width={1 / 2}>
-            <Label htmlFor="quantity">Quantity</Label>
+            <Label htmlFor="foodQuantity">Quantity</Label>
             <Select
               mt={1}
               ref={register}
-              id="quantity"
-              name="quantity"
+              id="foodQuantity"
+              name="foodQuantity"
               defaultValue="100g">
               {[100, 200, 300, 400, 500].map((n, i) => <option key={i} value={n}>{n}g</option>)}
             </Select>
